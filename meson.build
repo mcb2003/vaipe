@@ -8,6 +8,7 @@ executable('vaipe',
   'src/application.vala',
   'src/window.vala',
   'src/command_entry.vala',
+  c_args: ['-w'],
   dependencies: [
     dependency('gtk4'),
     dependency('gtksourceview-5'),
