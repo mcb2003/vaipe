@@ -20,6 +20,8 @@ I chose GTK and the GNOME stack because I like its programming model and since I
 
 Like many GNOME apps, we use the [Meson][meson] build system:
 
+Building requires a C compiler, Vala, Meson, Ninja, and the GTK 4 and GtkSourceView 5 development packages.
+
 ### Clone the repository
 
 ```sh
@@ -37,6 +39,12 @@ meson setup build
 
 ```sh
 meson compile -C build
+```
+
+### Run
+
+```sh
+./build/vaipe
 ```
 
 ### Install

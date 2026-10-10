@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=VAIPE
+Comment=Accessible programming environment
+Exec=vaipe
+Type=Application
+Categories=Development;
+StartupNotify=true
