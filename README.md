@@ -1,4 +1,4 @@
-# VAIPE - VIP's Accessible, Independent Programming Environment
+# VAIPE - VIP's Accessible, Integrated Programming Environment
 
 VAIPE is my dream Linux-native programming environment, written in [Vala][vala] and powered by [GTK][gtk], [GtkSourceView][gtk-source-view] and [VTE][vte]. It aims to provide a distraction free, stupidly simple workspace for working on code and running commands and terminal applications.
 
