@@ -14,8 +14,10 @@ decision and that decision should be justified and recorded.
 
 ## Decisions
 
-| \#### | Decision                                        | Status   |
-| ----: | ----------------------------------------------- | -------- |
-|  0001 | [Target Linux with GTK and libadwaita][adr0001] | Accepted |
+| \#### | Decision                                                   | Status   |
+| ----: | ---------------------------------------------------------- | -------- |
+|  0001 | [Target Linux with GTK and libadwaita][adr0001]            | Accepted |
+|  0002 | [Primarily Present Persistent Activities as Tabs][adr0002] | Accepted |
 
 [adr0001]: 0001-target-linux-with-gtk-and-libadwaita.md
+[adr0002]: 0002-primarily-present-persistent-activities-as-tabs.md
