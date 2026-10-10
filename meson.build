@@ -7,6 +7,7 @@ executable('vaipe',
   'src/main.vala',
   'src/application.vala',
   'src/window.vala',
+  'src/command_entry.vala',
   dependencies: [
     dependency('gtk4'),
     dependency('gtksourceview-5'),

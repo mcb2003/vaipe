@@ -7,6 +7,9 @@ namespace Vaipe {
         protected override void startup () {
             base.startup ();
             GtkSource.init ();
+
+            // Register window actions:
+            set_accels_for_action("win.show-command-entry", {"<Control>slash"});
         }
 
         protected override void activate () {
