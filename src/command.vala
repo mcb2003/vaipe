@@ -32,7 +32,7 @@ namespace Vaipe {
 
         public static Variant ? bind_no_args (string? remaining) throws CommandError {
             if (remaining != null) {
-                throw new CommandError.INVALID_ARGUMENTS ("This command takes no arguments");
+                throw new CommandError.INVALID_ARGUMENTS (_("This command takes no arguments"));
             }
             return null;
         }

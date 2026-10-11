@@ -22,6 +22,7 @@ config,
   'src/command.vala',
   'src/command_resolver.vala',
   'src/command_entry.vala',
+  'src/echo_area.vala',
   c_args: ['-w', '-DGETTEXT_PACKAGE="' + gettext_package + '"'],
   dependencies: [
     dependency('gtk4'),

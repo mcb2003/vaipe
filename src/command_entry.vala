@@ -66,17 +66,17 @@ namespace Vaipe {
             // Resolve command by name
             Command? command = commands.lookup (argv[0]);
             if (command == null) {
-                announce ("Command not found", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                Window.message (this, _("Command not found"));
                 return;
             }
 
             try {
                 if (!command.activate (previous_focus, argv[1])) {
-                    announce ("Command available in this context", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                    Window.message (this, _("Command unavailable in this context"));
                     return;
                 }
             } catch (CommandError e) {
-                announce (e.message, Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                Window.message (this, e.message);
                 return;
             }
 
