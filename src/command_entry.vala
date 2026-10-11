@@ -60,13 +60,8 @@ namespace Vaipe {
         }
 
         private void on_submit () {
-            // Parse command
-            string[] argv = text.split (" ");
-            if (argv.length == 0) {
-                // Nothing was entered
-                hide_command_entry (true);
-                return;
-            }
+            // Separate the command name from its argument string
+            string[] argv = text.split (" ", 2);
 
             // Resolve command by name
             Command? command = commands.lookup (argv[0]);
@@ -75,7 +70,7 @@ namespace Vaipe {
                 return;
             }
 
-            if (!previous_focus.activate_action (command.action_name, null)) {
+            if (!command.activate (previous_focus, argv[1])) {
                 announce ("Command available in this context", Gtk.AccessibleAnnouncementPriority.MEDIUM);
                 return;
             }
