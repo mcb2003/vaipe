@@ -25,6 +25,7 @@ config,
   c_args: ['-w', '-DGETTEXT_PACKAGE="' + gettext_package + '"'],
   dependencies: [
     dependency('gtk4'),
+    dependency('libadwaita-1', version: '>= 1.4'),
     dependency('gtksourceview-5'),
   ],
   install: true,

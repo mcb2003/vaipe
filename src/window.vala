@@ -1,5 +1,5 @@
 namespace Vaipe {
-    public class Window : Gtk.ApplicationWindow {
+    public class Window : Adw.ApplicationWindow {
         private CommandEntry command_entry;
 
         public Window (Vaipe.Application application) {
@@ -23,7 +23,7 @@ namespace Vaipe {
 
             overlay.add_overlay (command_entry);
 
-            child = overlay;
+            content = overlay;
         }
     }
 }

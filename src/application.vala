@@ -1,5 +1,5 @@
 namespace Vaipe {
-    public class Application : Gtk.Application {
+    public class Application : Adw.Application {
         public CommandResolver commands;
 
         public Application () {
@@ -10,6 +10,7 @@ namespace Vaipe {
 
         protected override void startup () {
             base.startup ();
+            Adw.init ();
             GtkSource.init ();
 
             var quit = new GLib.SimpleAction ("quit", null);

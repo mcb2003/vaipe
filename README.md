@@ -24,7 +24,7 @@ I have answers! See the [Interaction Model](docs/interaction-model.md).
 
 Like many GNOME apps, we use the [Meson][meson] build system:
 
-Building requires a C compiler, Vala, Meson, Ninja, and the GTK 4 and GtkSourceView 5 development packages.
+Building requires a C compiler, Vala, Meson, Ninja, and the GTK 4, libadwaita 1.4 or later, and GtkSourceView 5 development packages.
 
 ### Clone the repository
 
@@ -39,7 +39,7 @@ On Ubuntu:
 
 ```sh
 sudo apt update
-sudo apt install build-essential pkg-config valac meson ninja-build libgtk-4-dev libgtksourceview-5-dev
+sudo apt install build-essential pkg-config valac meson ninja-build libgtk-4-dev libadwaita-1-dev libgtksourceview-5-dev
 ```
 
 ### Configure
