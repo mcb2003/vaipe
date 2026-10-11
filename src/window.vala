@@ -4,7 +4,7 @@ namespace Vaipe {
 
         public Window (Gtk.Application application) {
             Object (application: application,
-                    title: "VAIPE",
+                    title: _("VAIPE"),
                     default_width: 800,
                     default_height: 600);
 
@@ -19,9 +19,9 @@ namespace Vaipe {
 
             var show_action = new SimpleAction ("show-command-entry", null);
             show_action.activate.connect (() => command_entry.show_command_entry ());
-            add_action(show_action);
+            add_action (show_action);
 
-overlay.add_overlay(command_entry);
+            overlay.add_overlay (command_entry);
 
             child = overlay;
         }

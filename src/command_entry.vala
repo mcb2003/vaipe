@@ -3,13 +3,13 @@ namespace Vaipe {
         private weak Gtk.Widget? previous_focus;
 
         public CommandEntry () {
-            Object (placeholder_text: "Enter a command",
+            Object (placeholder_text: _("Enter a command"),
     halign: Gtk.Align.FILL,
     valign: Gtk.Align.END,
     hexpand: true,
-    visible: false);
+        visible: false);
 
-update_property (Gtk.AccessibleProperty.LABEL, "Command");
+update_property (Gtk.AccessibleProperty.LABEL, _("Command"));
 
     // Close the command entry when focus is lost
     var focus_controller = new Gtk.EventControllerFocus ();
