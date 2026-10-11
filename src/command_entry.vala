@@ -70,8 +70,13 @@ namespace Vaipe {
                 return;
             }
 
-            if (!command.activate (previous_focus, argv[1])) {
-                announce ("Command available in this context", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+            try {
+                if (!command.activate (previous_focus, argv[1])) {
+                    announce ("Command available in this context", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                    return;
+                }
+            } catch (CommandError e) {
+                announce (e.message, Gtk.AccessibleAnnouncementPriority.MEDIUM);
                 return;
             }
 
