@@ -16,6 +16,10 @@ First off, there is no reason somebody couldn't port VAIPE to run on Windows, ma
 
 I chose GTK and the GNOME stack because I like its programming model and since I'm only targeting Linux / *nix, it allows me to integrate VAIPE with the desktop platform to a greater degree than cross-platform GUI toolkits like [wxWidgets][wxwidgets], particularly when it comes to accessibility. I chose GTK over [Qt][qt] specifically because of VTE, one of the few terminal emulator widgets accessible with Orca. GtkSourceView is also a boon because it means I don't have to build the syntax highlighting, gutter markers and common user interface guidelines for text/code editing on day 1, and I can modify them if and when I need to instead.
 
+## I have more questions about the design
+
+I have answers! See the [Interaction Model](docs/interaction-model.md).
+
 ## Installation
 
 Like many GNOME apps, we use the [Meson][meson] build system:
@@ -27,6 +31,15 @@ Building requires a C compiler, Vala, Meson, Ninja, and the GTK 4 and GtkSourceV
 ```sh
 git clone https://github.com/mcb2003/vaipe
 cd vaipe
+```
+
+### Install build dependencies
+
+On Ubuntu:
+
+```sh
+sudo apt update
+sudo apt install build-essential pkg-config valac meson ninja-build libgtk-4-dev libgtksourceview-5-dev
 ```
 
 ### Configure
