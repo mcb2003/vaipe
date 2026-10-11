@@ -1,7 +1,9 @@
 namespace Vaipe {
     // Gtk.Revealer is a sealed class, so we must derive from another widget instead
     public class EchoArea : Gtk.Box {
-        private Gtk.Label message_label = new Gtk.Label("");
+        private Gtk.Label message_label = new Gtk.Label("") {
+            wrap = true,
+        };
         private Gtk.Revealer revealer;
         private uint? current_timeout;
 
