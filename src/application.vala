@@ -1,7 +1,11 @@
 namespace Vaipe {
     public class Application : Gtk.Application {
+        public CommandResolver commands;
+
         public Application () {
             Object (application_id: "vip.thefake.vaipe");
+
+            commands = new CommandResolver ();
         }
 
         protected override void startup () {
@@ -11,8 +15,9 @@ namespace Vaipe {
             var quit = new GLib.SimpleAction ("quit", null);
             quit.activate.connect (() => this.quit ());
             add_action (quit);
+            commands.add (new Command ("quit", "app.quit"));
 
-            // Register window actions:
+            // Set keyboard shortcuts for actions:
             set_accels_for_action ("app.quit", { "<Control>q" });
             set_accels_for_action ("win.show-command-entry", { "<Control>slash" });
         }

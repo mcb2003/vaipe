@@ -19,6 +19,8 @@ config,
   'src/main.vala',
   'src/application.vala',
   'src/window.vala',
+  'src/command.vala',
+  'src/command_resolver.vala',
   'src/command_entry.vala',
   c_args: ['-w', '-DGETTEXT_PACKAGE="' + gettext_package + '"'],
   dependencies: [

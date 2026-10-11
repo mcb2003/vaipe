@@ -1,41 +1,45 @@
 namespace Vaipe {
     public class CommandEntry : Gtk.Entry {
+        private CommandResolver commands;
         private weak Gtk.Widget? previous_focus;
 
-        public CommandEntry () {
-            Object (placeholder_text: _("Enter a command"),
-    halign: Gtk.Align.FILL,
-    valign: Gtk.Align.END,
-    hexpand: true,
-        visible: false);
+        public CommandEntry (CommandResolver commands) {
+            Object (placeholder_text : _("Enter a command"),
+                    halign: Gtk.Align.FILL,
+                    valign: Gtk.Align.END,
+                    hexpand: true,
+                    visible: false);
+            this.commands = commands;
 
-update_property (Gtk.AccessibleProperty.LABEL, _("Command"));
+            update_property (Gtk.AccessibleProperty.LABEL, _("Command"));
 
-    // Close the command entry when focus is lost
-    var focus_controller = new Gtk.EventControllerFocus ();
-    focus_controller.leave.connect (() => hide_command_entry (false)); // Don't restore old focus
-    add_controller (focus_controller);
+            // Close the command entry when focus is lost
+            var focus_controller = new Gtk.EventControllerFocus ();
+            focus_controller.leave.connect (() => hide_command_entry (false)); // Don't restore old focus
+            add_controller (focus_controller);
 
-    // Close the command entry when escape is pressed
-    var key_controller = new Gtk.EventControllerKey ();
-    key_controller.propagation_phase = Gtk.PropagationPhase.CAPTURE;
-key_controller.key_pressed.connect (on_key_pressed);
-    add_controller (key_controller);
+            // Close the command entry when escape is pressed
+            var key_controller = new Gtk.EventControllerKey ();
+            key_controller.propagation_phase = Gtk.PropagationPhase.CAPTURE;
+            key_controller.key_pressed.connect (on_key_pressed);
+            add_controller (key_controller);
+
+            activate.connect (on_submit);
         }
 
         public void show_command_entry () {
-            if (visible) return;
+            if (visible)return;
 
             // Save current focus
             var root = get_root ();
             previous_focus = root == null ? null : root.get_focus ();
 
             visible = true;
-                        grab_focus ();
+            grab_focus ();
         }
 
         public void hide_command_entry (bool restore_focus = true) {
-            if (!visible) return;
+            if (!visible)return;
 
             visible = false;
             text = "";
@@ -47,12 +51,38 @@ key_controller.key_pressed.connect (on_key_pressed);
         }
 
         private bool on_key_pressed (Gtk.EventControllerKey c, uint keyval, uint keycode, Gdk.ModifierType mods) {
-if (keyval == Gdk.Key.Escape) {
-    hide_command_entry ();
-    return true; // Handled
-}
+            if (keyval == Gdk.Key.Escape) {
+                hide_command_entry ();
+                return true; // Handled
+            }
 
-return false; // Not handled by this widget
+            return false; // Not handled by this widget
+        }
+
+        private void on_submit () {
+            // Parse command
+            string[] argv = text.split (" ");
+            if (argv.length == 0) {
+                // Nothing was entered
+                hide_command_entry (true);
+                return;
+            }
+
+            // Resolve command by name
+            Command? command = commands.lookup (argv[0]);
+            if (command == null) {
+                announce ("Command not found", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                return;
+            }
+
+            if (!previous_focus.activate_action (command.action_name, null)) {
+                announce ("Command available in this context", Gtk.AccessibleAnnouncementPriority.MEDIUM);
+                return;
+            }
+
+            // Command was successfully executed
+            hide_command_entry (true);
+            return;
         }
     }
 }

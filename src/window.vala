@@ -2,7 +2,7 @@ namespace Vaipe {
     public class Window : Gtk.ApplicationWindow {
         private CommandEntry command_entry;
 
-        public Window (Gtk.Application application) {
+        public Window (Vaipe.Application application) {
             Object (application: application,
                     title: _("VAIPE"),
                     default_width: 800,
@@ -14,7 +14,7 @@ namespace Vaipe {
                 }
             };
 
-            command_entry = new CommandEntry ();
+            command_entry = new CommandEntry (application.commands);
 
 
             var show_action = new SimpleAction ("show-command-entry", null);
