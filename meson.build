@@ -36,3 +36,8 @@ i18n.merge_file(
   install: true,
   install_dir: get_option('datadir') / 'applications',
 )
+
+# Convenience dev environment that forces use of local translations
+meson.add_devenv({
+  'VAIPE_LOCALEDIR': meson.current_build_dir() / 'po',
+})

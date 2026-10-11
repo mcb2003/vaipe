@@ -57,7 +57,7 @@ meson compile -C build
 ### Run
 
 ```sh
-./build/vaipe
+meson devenv -C build ./vaipe
 ```
 
 ### Install
