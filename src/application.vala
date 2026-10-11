@@ -8,8 +8,13 @@ namespace Vaipe {
             base.startup ();
             GtkSource.init ();
 
+            var quit = new GLib.SimpleAction ("quit", null);
+            quit.activate.connect (() => this.quit ());
+            add_action (quit);
+
             // Register window actions:
-            set_accels_for_action("win.show-command-entry", {"<Control>slash"});
+            set_accels_for_action ("app.quit", { "<Control>q" });
+            set_accels_for_action ("win.show-command-entry", { "<Control>slash" });
         }
 
         protected override void activate () {
