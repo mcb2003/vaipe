@@ -17,7 +17,7 @@ namespace Vaipe {
             command_entry = new CommandEntry (application.commands);
 
             var show_action = new SimpleAction ("show-command-entry", null);
-            show_action.activate.connect (() => command_entry.show_command_entry ());
+            show_action.activate.connect (command_entry.show_command_entry);
             add_action (show_action);
 
             overlay.add_overlay (command_entry);

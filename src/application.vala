@@ -14,7 +14,7 @@ namespace Vaipe {
             GtkSource.init ();
 
             var quit = new GLib.SimpleAction ("quit", null);
-            quit.activate.connect (() => this.quit ());
+            quit.activate.connect (this.quit);
             add_action (quit);
             commands.add (new Command ("quit", "app.quit"));
 

@@ -23,8 +23,6 @@ namespace Vaipe {
             key_controller.propagation_phase = Gtk.PropagationPhase.CAPTURE;
             key_controller.key_pressed.connect (on_key_pressed);
             add_controller (key_controller);
-
-            activate.connect (on_submit);
         }
 
         public void show_command_entry () {
@@ -59,7 +57,7 @@ namespace Vaipe {
             return false; // Not handled by this widget
         }
 
-        private void on_submit () {
+        public override void activate () {
             // Separate the command name from its argument string
             string[] argv = text.split (" ", 2);
 
@@ -82,7 +80,6 @@ namespace Vaipe {
 
             // Command was successfully executed
             hide_command_entry (true);
-            return;
         }
     }
 }
