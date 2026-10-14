@@ -1,5 +1,6 @@
 src/application.vala
 src/command_entry.vala
+src/command.vala
 src/main.vala
 src/window.vala
 data/vip.thefake.vaipe.desktop.in

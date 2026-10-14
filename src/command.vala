@@ -36,5 +36,13 @@ namespace Vaipe {
             }
             return null;
         }
+
+        public static Variant bind_string_arg (string? remaining) throws CommandError {
+            if (remaining == null) {
+                throw new CommandError.INVALID_ARGUMENTS (_("This command requires an argument"));
+            }
+
+            return new Variant.string (remaining);
+        }
     }
 }
