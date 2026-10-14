@@ -16,7 +16,10 @@ namespace Vaipe {
             var quit = new GLib.SimpleAction ("quit", null);
             quit.activate.connect (this.quit);
             add_action (quit);
+
             commands.add (new Command ("quit", "app.quit"));
+            commands.add (new Command ("open", "open", Command.bind_string_arg));
+            commands.add (new Command ("save", "save"));
 
             // Set keyboard shortcuts for actions:
             set_accels_for_action ("app.quit", { "<Control>q" });

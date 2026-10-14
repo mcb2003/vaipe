@@ -3,4 +3,8 @@ src/command_entry.vala
 src/command.vala
 src/main.vala
 src/window.vala
+
+src/editor/document.vala
+src/editor/view.vala
+
 data/vip.thefake.vaipe.desktop.in
