@@ -29,7 +29,6 @@ namespace Vaipe {
             if (visible)return;
 
             // Save current focus
-            var root = get_root ();
             previous_focus = root == null ? null : root.get_focus ();
 
             visible = true;
@@ -60,6 +59,12 @@ namespace Vaipe {
         public override void activate () {
             // Separate the command name from its argument string
             string[] argv = text.split (" ", 2);
+
+            if (argv.length == 0) {
+                // Empty command
+                hide_command_entry ();
+                return;
+            }
 
             // Resolve command by name
             Command? command = commands.lookup (argv[0]);
