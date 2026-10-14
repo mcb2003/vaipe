@@ -5,6 +5,8 @@ namespace Vaipe.Editor {
         static construct {
             install_action ("open", "s", handle_open);
             install_action ("save", null, handle_save);
+
+            add_binding_action (Gdk.Key.S, Gdk.ModifierType.CONTROL_MASK, "save", null);
         }
 
         public View (Document document) {
