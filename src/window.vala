@@ -10,7 +10,7 @@ namespace Vaipe {
 
             var overlay = new Gtk.Overlay () {
                 child = new Gtk.ScrolledWindow () {
-                    child = new GtkSource.View ()
+                    child = new Editor.View (new Editor.Document ())
                 }
             };
 
