@@ -17,7 +17,15 @@ namespace Vaipe {
             quit.activate.connect (this.quit);
             add_action (quit);
 
+            var new_window = new GLib.SimpleAction ("new-window", null);
+            new_window.activate.connect (() => {
+                var win = new Window (this);
+                win.present ();
+            });
+            add_action (new_window);
+
             commands.add (new Command ("quit", "app.quit"));
+            commands.add (new Command ("new-window", "app.new-window"));
             commands.add (new Command ("open", "open", Command.bind_string_arg));
             commands.add (new Command ("save", "save"));
 
