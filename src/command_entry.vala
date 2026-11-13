@@ -5,19 +5,29 @@ namespace Vaipe {
 
         private CompletionPopover? completion_menu;
         private string? completion_text;
+        private CompletionContext? completion_context;
         private uint focus_check;
 
-        private int command_end {
-            get {
+        private string current_command {
+            owned get {
                 int end = text.index_of (" ");
-                return end < 0 ? text.length : end;
+                return text.substring (0, end < 0 ? text.length : end);
+            }
+        }
+
+        private bool can_complete_command {
+            get {
+                // You can complete a command when the cursor is at the end of the command name and there is no selection.
+                int selection_start, selection_end;
+                return get_position () == current_command.char_count () &&
+                       !get_selection_bounds (out selection_start, out selection_end);
             }
         }
 
         public CommandEntry (CommandResolver commands) {
             Object (placeholder_text : _("Enter a command"),
                     halign : Gtk.Align.FILL,
-                    valign: Gtk.Align.END,
+                    valign : Gtk.Align.END,
                     hexpand: true,
                     visible: false);
             this.commands = commands;
@@ -69,7 +79,6 @@ namespace Vaipe {
 
             visible = false;
             text = "";
-            completion_menu.dismiss ();
             reset_completion ();
 
             // Restore previous focus
@@ -119,9 +128,8 @@ namespace Vaipe {
             focus_check = Idle.add (() => {
                 focus_check = 0;
                 var focus = root == null ? null : root.get_focus ();
-                bool is_ancestor = focus != this && !focus.is_ancestor (this);
                 // If the command entry is visible and focus has moved outside of it, hide it.
-                if (visible && (focus == null || is_ancestor)) {
+                if (visible && (focus == null || (focus != this && !focus.is_ancestor (this)))) {
                     hide_command_entry (false);
                 }
                 return Source.REMOVE;
@@ -132,44 +140,53 @@ namespace Vaipe {
             completion_text = null;
         }
 
+        // Choose a model and replacement range for the cursor's current context.
+        private CompletionContext ? create_completion_context () {
+            if (!can_complete_command)return null;
+
+            string word = current_command;
+            return new CompletionContext (new CommandNameCompletionModel (commands), 0, word.char_count (), word);
+        }
+
         private void insert_completion (string name) {
-            string suffix = text.substring (command_end);
-            text = name + (suffix.length == 0 ? " " : suffix);
-            set_position (name.char_count () + 1);
+            if (completion_context != null)completion_context.replace (this, name, true);
         }
 
         private void complete_command () {
-            int end = command_end;
-            string word = text.substring (0, end);
-            int start_selection, end_selection;
-            // If the cursor is not at the end of the command name, or if there is a selection, we don't complete.
-            if (get_position () != word.char_count () ||
-                get_selection_bounds (out start_selection, out end_selection)) {
+            if (completion_context == null || completion_text != text) {
+                completion_context = create_completion_context ();
+            }
+            if (completion_context == null) {
+                // No completion context available, or the cursor is not at the end of the command name.
                 reset_completion ();
                 error_bell ();
                 return;
             }
 
-            var matches = commands.complete (word);
-            if (matches.length == 0) {
+            var model = completion_context.model;
+            int items = model.get_n_items ();
+            if (items == 0) {
+                // No completion candidates to show.
                 reset_completion ();
                 error_bell ();
                 return;
-            } else if (matches.length == 1) {
-                insert_completion (matches[0]);
+            } else if (items == 1) {
+                // One unambiguous completion candidate; insert it immediately.
+                insert_completion (model.get_completion (0));
                 return;
             }
 
+            // Multiple completion candidates; show the popover menu.
             if (completion_text == text) {
-                completion_menu.show_candidates (matches);
+                completion_menu.model = model;
+                completion_menu.show_candidates ();
                 return;
             }
 
-            // Insert the longest common prefix of all matches.
-            string common = longest_common_prefix (matches);
-            text = common + text.substring (end);
-            set_position (common.char_count ());
-            // Store this after the insertion, whose signals reset completion.
+            // Insert the common prefix, keeping the same context for the next Tab.
+            string common = model.common_prefix;
+            completion_context.replace (this, common);
+            completion_context.refilter (common, get_position ());
             completion_text = text;
             error_bell (); // Since completion is still ambiguous
         }
@@ -182,7 +199,7 @@ namespace Vaipe {
                 hide_command_entry ();
                 return true; // Handled
 
-            case Gdk.Key.Tab:
+            case Gdk.Key.Tab :
                 // All but capslock must not be pressed.
                 if ((mods & (Gdk.ModifierType.SHIFT_MASK | Gdk.ModifierType.CONTROL_MASK
                              | Gdk.ModifierType.ALT_MASK | Gdk.ModifierType.SUPER_MASK)) == 0) {
