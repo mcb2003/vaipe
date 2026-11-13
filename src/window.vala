@@ -1,6 +1,12 @@
 namespace Vaipe {
     public class Window : Adw.ApplicationWindow {
         private CommandEntry command_entry;
+        private EchoArea echo_area;
+
+        static construct {
+            install_action ("win.show-command-entry", null, handle_show_command_entry);
+            install_action ("win.message", "s", handle_message);
+        }
 
         public Window (Vaipe.Application application) {
             Object (application: application,
@@ -15,26 +21,14 @@ namespace Vaipe {
             };
 
             command_entry = new CommandEntry (application.commands);
-
-            var show_action = new SimpleAction ("show-command-entry", null);
-            show_action.activate.connect (command_entry.show_command_entry);
-            add_action (show_action);
-
             overlay.add_overlay (command_entry);
 
             var toolbar_view = new Adw.ToolbarView () {
                 content = overlay
             };
 
-            var echo_area = new EchoArea ();
+            echo_area = new EchoArea ();
             toolbar_view.add_bottom_bar (echo_area);
-
-            var message_action = new SimpleAction ("message", GLib.VariantType.STRING);
-            message_action.activate.connect ((arg) => {
-                var message = arg.get_string (null);
-                echo_area.message (message);
-            });
-            add_action (message_action);
 
             content = toolbar_view;
         }
@@ -44,6 +38,16 @@ namespace Vaipe {
             if (!widget.activate_action ("win.message", "s", message)) {
                 warning ("Could not activate win.message action");
             }
+        }
+
+        private static void handle_show_command_entry (Gtk.Widget widget, string name, Variant? arg) requires (arg == null) {
+            var window = (Window) widget;
+            window.command_entry.show_command_entry ();
+        }
+
+        private static void handle_message (Gtk.Widget widget, string name, Variant? arg) requires (arg != null) {
+            var window = (Window) widget;
+            window.echo_area.message (arg.get_string (null));
         }
     }
 }
