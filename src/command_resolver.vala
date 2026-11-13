@@ -13,5 +13,18 @@ namespace Vaipe {
         public Command ? lookup (string command) {
             return commands.lookup (command);
         }
+
+        public string[] complete (string prefix) {
+            var names = commands.get_keys ();
+            names.sort (strcmp);
+
+            string[] matches = {};
+            foreach (var name in names) {
+                if (name.has_prefix (prefix)) {
+                    matches += name;
+                }
+            }
+            return matches;
+        }
     }
 }
