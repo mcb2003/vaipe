@@ -4,6 +4,7 @@ namespace Vaipe {
         private Gtk.PopoverMenu menu;
         private weak Gtk.Entry? entry;
         private Gtk.EventControllerKey key_controller;
+        private bool forwarding_input;
 
         public bool visible { get { return menu.visible; } }
         public CompletionModel? model {
@@ -19,6 +20,7 @@ namespace Vaipe {
 
         public signal void candidate_selected (string candidate);
         public signal void closed ();
+        public signal void input_changed ();
 
         public CompletionPopover (Gtk.Entry entry) {
             this.entry = entry;
@@ -92,7 +94,8 @@ namespace Vaipe {
         }
 
         private void on_entry_changed () {
-            dismiss ();
+            // Forwarded edits refresh once the text and cursor have both settled.
+            if (!forwarding_input)dismiss ();
         }
 
         private void on_entry_visibility_changed () {
@@ -105,6 +108,28 @@ namespace Vaipe {
             if (keyval == Gdk.Key.Escape) {
                 dismiss (true);
                 return true;
+            }
+
+            // Leave shortcuts to GTK.
+            if ((mods & (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.ALT_MASK
+                         | Gdk.ModifierType.SUPER_MASK | Gdk.ModifierType.META_MASK)) != 0)return false;
+
+            unichar character = Gdk.keyval_to_unicode (keyval);
+            if (character.isprint () || keyval == Gdk.Key.BackSpace || keyval == Gdk.Key.Delete ||
+                keyval == Gdk.Key.Multi_key ||
+                (keyval >= Gdk.Key.dead_grave && keyval <= Gdk.Key.dead_greek)) {
+                // Let GtkText handle typing, editing and input methods.
+                var target = entry.get_delegate () as Gtk.Widget;
+                if (target == null)return false;
+
+                string previous_text = entry.text;
+                // Keep the menu open while GTK updates the entry.
+                forwarding_input = true;
+                bool handled = key_controller.forward (target);
+                forwarding_input = false;
+                // Refresh after both the text and cursor have been updated.
+                if (entry.text != previous_text)input_changed ();
+                return handled;
             }
 
             return false; // Not handled by this widget

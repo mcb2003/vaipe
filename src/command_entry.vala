@@ -37,6 +37,7 @@ namespace Vaipe {
             completion_menu = new CompletionPopover (this);
             completion_menu.candidate_selected.connect (insert_completion);
             completion_menu.closed.connect (check_focus_later);
+            completion_menu.input_changed.connect (refresh_candidates);
 
             changed.connect (reset_completion);
             notify["cursor-position"].connect (reset_completion);
@@ -146,6 +147,20 @@ namespace Vaipe {
 
             string word = current_command;
             return new CompletionContext (new CommandNameCompletionModel (commands), 0, word.char_count (), word);
+        }
+
+        // Refilter the current model without replacing the open menu.
+        private void refresh_candidates () {
+            if (completion_context == null)return;
+
+            if (!can_complete_command) {
+                completion_menu.dismiss (true);
+                return;
+            }
+
+            string word = current_command;
+            completion_context.refilter (word, word.char_count ());
+            completion_text = text;
         }
 
         private void insert_completion (string name) {
